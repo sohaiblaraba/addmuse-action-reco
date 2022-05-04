@@ -145,6 +145,25 @@ class Person():
         else:
             return False
 
+
+    def chinchin2(self):
+        dist0 = self.distance(self.pose[self.nodes['LHip']], self.pose[self.nodes['LKnee']])
+        dist1 = self.distance(self.pose[self.nodes['LShoulder']], self.pose[self.nodes['LWrist']])/dist0
+        dist2 = self.distance(self.pose[self.nodes['RShoulder']], self.pose[self.nodes['RWrist']])/dist0
+        dist3 = self.distance(self.pose[self.nodes['LWrist']], self.pose[self.nodes['RWrist']])/dist0
+
+        ang1 = self.angle(self.pose[self.nodes['LHip']] - self.pose[self.nodes['LKnee']], 
+                          self.pose[self.nodes['LFoot']] - self.pose[self.nodes['LKnee']])
+        ang2 = self.angle(self.pose[self.nodes['RHip']] - self.pose[self.nodes['RKnee']], 
+                          self.pose[self.nodes['RFoot']] - self.pose[self.nodes['RKnee']])
+
+        if dist1 < 0.8 and dist2 < 0.8 and dist3 < 0.9 and (ang1 < 2.8 or ang2 < 2.8):
+            self.feature.append(0)
+            return True
+        else:
+            return False
+
+
     def habitant(self):
         ang1 = self.angle(self.pose[self.nodes['LElbow']] - self.pose[self.nodes['LShoulder']], 
                           self.pose[self.nodes['LHip']] - self.pose[self.nodes['LShoulder']])
@@ -229,11 +248,33 @@ class Person():
             return False
 
 
+    def sgeorge2(self):
+        ang1 = self.angle(self.pose[self.nodes['LElbow']] - self.pose[self.nodes['LShoulder']], 
+                          self.pose[self.nodes['LHip']] - self.pose[self.nodes['LShoulder']])
+
+        ang2 = self.angle(self.pose[self.nodes['RElbow']] - self.pose[self.nodes['RShoulder']], 
+                          self.pose[self.nodes['RHip']] - self.pose[self.nodes['RShoulder']])
+
+        ang3 = self.angle(self.pose[self.nodes['LHip']] - self.pose[self.nodes['LKnee']], 
+                          self.pose[self.nodes['LFoot']] - self.pose[self.nodes['LKnee']])
+        ang4 = self.angle(self.pose[self.nodes['RHip']] - self.pose[self.nodes['RKnee']], 
+                          self.pose[self.nodes['RFoot']] - self.pose[self.nodes['RKnee']])
+
+        print(ang1, ang2, ang3, ang4)
+
+        if ((ang1 > math.pi/2 and ang2 < math.pi/4) or (ang2 > math.pi/2 and ang1 < math.pi/4)) and (ang3 < 2.8 or ang4 < 2.8):
+            self.feature.append(3)
+            return True
+        else:
+            return False
+
+
+
     def compute_features(self):
-        c = self.chinchin()
+        c = self.chinchin2()
         h = self.habitant()
         d = self.diable()
-        s = self.sgeorge()
+        s = self.sgeorge2()
 
         if not c and not h and not d and not s:
             self.feature.append(4)

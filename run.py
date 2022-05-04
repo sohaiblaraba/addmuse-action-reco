@@ -68,6 +68,7 @@ if __name__ == '__main__':
                 active = False
 
             people_tmp.add_person(pose, box, active=active)
+
         if not pause:
             people.track(people_tmp.people, smallest=100)
             # people.compute_features()
@@ -104,7 +105,7 @@ if __name__ == '__main__':
                     elif abs(person.position[0] - xtargets[1]) <= 100:
                         com_pose = 1
 
-                    # print(com.list_of_people_to_communicate)
+                    # print("out", com.list_of_people_to_communicate)
                     if com_pose in com.list_of_people_to_communicate:
                         print('JE SUIS DEDANS')
                         person.feature = [x for x in person.feature if x != 4]
@@ -113,6 +114,7 @@ if __name__ == '__main__':
                         com.send(message)
                         people.people[people.index_by_id(person.id)].reset_feature()
                         # person.reset_feature()
+                        com.list_of_people_to_analyze.remove(com_pose)
                         com.list_of_people_to_communicate.remove(com_pose)
                     
                     # Draw Skeleton

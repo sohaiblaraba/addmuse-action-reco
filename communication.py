@@ -36,8 +36,8 @@ class Communication():
         print(self.list_of_people_to_communicate)
         
 
-        if int(args) in self.list_of_people_to_analyze:
-            self.list_of_people_to_analyze.remove(int(args))
+        # if int(args) in self.list_of_people_to_analyze:
+        #     self.list_of_people_to_analyze.remove(int(args))
 
 
     def dispatch(self):
@@ -61,6 +61,10 @@ class Communication():
     def send(self, message):
         self.client.send_message('/reco', message)
         print('[SENT]', '/reco', message)
+
+    # def send(self, head, message):
+    #     self.client.send_message(head, message)
+    #     print('[SENT]', head, message)
         
 
 
