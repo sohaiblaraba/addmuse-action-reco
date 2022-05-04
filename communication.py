@@ -18,6 +18,7 @@ class Communication():
         self.start_reco = False
         self.stop_reco = False
         self.list_of_people_to_analyze = []
+        self.list_of_people_to_communicate = []
 
     def rstart(self, unused_addr, args):
         print('START RECEIVED', args)
@@ -30,6 +31,11 @@ class Communication():
         print('STOP RECEIVED', args)
         self.start_reco = False
         self.stop_reco = True
+        self.list_of_people_to_communicate.append(int(args))
+        self.list_of_people_to_communicate = list(dict.fromkeys(self.list_of_people_to_communicate)) # remove duplicates
+        print(self.list_of_people_to_communicate)
+        
+
         if int(args) in self.list_of_people_to_analyze:
             self.list_of_people_to_analyze.remove(int(args))
 

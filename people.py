@@ -90,11 +90,18 @@ class Person():
 
 
     def get_feature(self):
-        if len(self.feature) == self.feature_buffer:
+        # if len(self.feature) >= self.feature_buffer:
+        #     mf, _ = self.most_frequent(self.feature)
+        # else:
+        #     mf = 4
+        if len(self.feature) > 0:
             mf, _ = self.most_frequent(self.feature)
         else:
             mf = 4
         return mf
+
+    def reset_feature(self):
+        self.feature = []
 
 
 
@@ -144,7 +151,7 @@ class Person():
         ang2 = self.angle(self.pose[self.nodes['RElbow']] - self.pose[self.nodes['RShoulder']], 
                           self.pose[self.nodes['RHip']] - self.pose[self.nodes['RShoulder']])
 
-        if ang1 > 2.3 or ang2 > 2.3:
+        if ang1 > 2.3 and ang2 > 2.3:
             self.feature.append(2)
             return True
         else:
@@ -231,7 +238,7 @@ class Person():
         if not c and not h and not d and not s:
             self.feature.append(4)
 
-        self.feature = self.feature[-self.feature_buffer:]
+        # self.feature = self.feature[-self.feature_buffer:]
 
 
 class People():
