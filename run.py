@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
     colors = [(204, 204, 0), (255, 51, 255)]
 
-    capture = [0, 1, './data/test.mp4'][0]
+    capture = [0, 1, './data/test.mp4'][2]
      
     if type(capture) is int:
         cap = cv2.VideoCapture(capture, cv2.CAP_DSHOW)
