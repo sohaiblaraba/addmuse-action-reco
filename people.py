@@ -1,6 +1,6 @@
 import math
 import numpy as np
-from sklearn.neighbors import NearestCentroid
+# from sklearn.neighbors import NearestCentroid
 
 class Person():
     def __init__(self, pose=None, pose_t0=None, box=None, position=None, feature=[], id=-1, active=False):
@@ -88,12 +88,7 @@ class Person():
         mf = max(set(List), key = List.count)
         return mf, List.count(mf)
 
-
     def get_feature(self):
-        # if len(self.feature) >= self.feature_buffer:
-        #     mf, _ = self.most_frequent(self.feature)
-        # else:
-        #     mf = 4
         if len(self.feature) > 0:
             mf, _ = self.most_frequent(self.feature)
         else:
@@ -218,6 +213,44 @@ class Person():
             return True
         else:
             return False
+
+
+    def diable2(self):
+
+        vx_lelbow = abs(self.pose[self.nodes['LElbow']][0] - self.pose_t0[self.nodes['LElbow']][0])
+        vx_relbow = abs(self.pose[self.nodes['RElbow']][0] - self.pose_t0[self.nodes['RElbow']][0])
+
+        ang_l_e_sh_h = self.angle(self.pose[self.nodes['LWrist']] - self.pose[self.nodes['LShoulder']], 
+                          self.pose[self.nodes['LHip']] - self.pose[self.nodes['LShoulder']])
+
+        ang_r_e_sh_h = self.angle(self.pose[self.nodes['RWrist']] - self.pose[self.nodes['RShoulder']], 
+                          self.pose[self.nodes['RHip']] - self.pose[self.nodes['RShoulder']])
+
+        ang_l_w_e_sh = self.angle(self.pose[self.nodes['LWrist']] - self.pose[self.nodes['LElbow']], 
+                          self.pose[self.nodes['LShoulder']] - self.pose[self.nodes['LElbow']])
+
+        ang_r_w_e_sh = self.angle(self.pose[self.nodes['RWrist']] - self.pose[self.nodes['RElbow']], 
+                          self.pose[self.nodes['RShoulder']] - self.pose[self.nodes['RElbow']])
+
+
+        dist_lk_rk_t1 = self.distance(self.pose[self.nodes['LKnee']], self.pose[self.nodes['RKnee']])
+        dist_lk_rk_t0 = self.distance(self.pose_t0[self.nodes['LKnee']], self.pose_t0[self.nodes['RKnee']])
+
+        vdk = abs(dist_lk_rk_t1 - dist_lk_rk_t0)
+        # print(self.id, vdk)
+
+        # print('DIABLE2', self.id, vx_lelbow, vx_relbow, ang_l_e_sh_h, ang_r_e_sh_h, vdk)
+        # print(10, math.pi/5)
+        # print(ang_l_w_e_sh)
+
+        if ((vx_lelbow > 5 and ang_r_e_sh_h < math.pi/6 and ang_r_w_e_sh > math.pi*0.7) or (vx_relbow > 5 and ang_l_e_sh_h < math.pi/6 and ang_l_w_e_sh > math.pi*0.7)) and vdk < 1:
+            self.feature.append(1)
+            print(self.id, "DIABLE")
+            return True
+        else:
+            print(' ')
+            return False
+
         
     def sgeorge(self):
 
@@ -247,7 +280,6 @@ class Person():
         else:
             return False
 
-
     def sgeorge2(self):
         ang1 = self.angle(self.pose[self.nodes['LElbow']] - self.pose[self.nodes['LShoulder']], 
                           self.pose[self.nodes['LHip']] - self.pose[self.nodes['LShoulder']])
@@ -260,8 +292,6 @@ class Person():
         ang4 = self.angle(self.pose[self.nodes['RHip']] - self.pose[self.nodes['RKnee']], 
                           self.pose[self.nodes['RFoot']] - self.pose[self.nodes['RKnee']])
 
-        print(ang1, ang2, ang3, ang4)
-
         if ((ang1 > math.pi/2 and ang2 < math.pi/4) or (ang2 > math.pi/2 and ang1 < math.pi/4)) and (ang3 < 2.8 or ang4 < 2.8):
             self.feature.append(3)
             return True
@@ -273,7 +303,7 @@ class Person():
     def compute_features(self):
         c = self.chinchin2()
         h = self.habitant()
-        d = self.diable()
+        d = self.diable2()
         s = self.sgeorge2()
 
         if not c and not h and not d and not s:

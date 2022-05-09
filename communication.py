@@ -1,7 +1,6 @@
 from pythonosc import dispatcher
 from pythonosc import osc_server
 from pythonosc import udp_client
-import asyncio
 
 import threading
 
@@ -34,11 +33,6 @@ class Communication():
         self.list_of_people_to_communicate.append(int(args))
         self.list_of_people_to_communicate = list(dict.fromkeys(self.list_of_people_to_communicate)) # remove duplicates
         print(self.list_of_people_to_communicate)
-        
-
-        # if int(args) in self.list_of_people_to_analyze:
-        #     self.list_of_people_to_analyze.remove(int(args))
-
 
     def dispatch(self):
         self.dispatcher.map('/start', self.rstart)
@@ -62,9 +56,9 @@ class Communication():
         self.client.send_message('/reco', message)
         print('[SENT]', '/reco', message)
 
-    # def send(self, head, message):
-    #     self.client.send_message(head, message)
-    #     print('[SENT]', head, message)
+    def custom_send(self, head, message):
+        self.client.send_message(head, message)
+        print('[SENT]', head, message)
         
 
 
