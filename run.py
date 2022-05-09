@@ -8,8 +8,8 @@ import cv2
 
 
 if __name__ == '__main__':
-    com = Communication(myip='192.168.0.110', receiveport=8000, sendip ='192.168.0.100', sendport=8100)
-    # com = Communication(myip='localhost', receiveport=8000, sendip ='localhost', sendport=8100)
+    # com = Communication(myip='192.168.0.110', receiveport=8000, sendip ='192.168.0.100', sendport=8100)
+    com = Communication(myip='localhost', receiveport=8000, sendip ='localhost', sendport=8100)
     com.start()
 
     kapao = Kapao()
@@ -20,30 +20,21 @@ if __name__ == '__main__':
     # classes = ['ACTION 1', 'ACTION 2', 'ACTION 3', 'ACTION 4', '']
 
     colors = [(204, 204, 0), (255, 51, 255)]
-    # for i in range(1000):
-    #     r = random.randint(0, 255)
-    #     g = random.randint(0, 255)
-    #     b = random.randint(0, 255)
-    #     colors.append([r, g, b])
 
-    capture = './data/test.mp4'
-    # capture = './data/WIN_20220324_16_27_57_Pro.mp4_3.mp4'
-    # cap = cv2.VideoCapture(capture)
+    capture = [0, 1, './data/test.mp4', './data/test2.mp4'][2]
+     
+    if type(capture) is int:
+        cap = cv2.VideoCapture(capture, cv2.CAP_DSHOW)
+    else:
+        cap = cv2.VideoCapture(capture)
 
-    capture = 1
-    cap = cv2.VideoCapture(capture, cv2.CAP_DSHOW)
-    
     cap.set(3, 1920)
     cap.set(4, 1080)
-
-    # width  = cap.get(3)  # float `width`
-    # height = cap.get(4)  # float `height`
 
     xtargets = [500, 1320]
     ytarget = 900
 
     ret, frame = cap.read()
-    print(frame.shape)
     people = People()
     pause = False
     f = 0
@@ -54,8 +45,6 @@ if __name__ == '__main__':
             position = (np.array(pose[11]) + np.array(pose[12]))/2.
             position = position[:-1]
 
-
-            # com.start_reco = True
             com_pose = -1
             if abs(position[0] - xtargets[0]) <= 100 and abs(box[3] - ytarget) <= 100:
                 com_pose = 0
@@ -71,7 +60,6 @@ if __name__ == '__main__':
 
         if not pause:
             people.track(people_tmp.people, smallest=100)
-            # people.compute_features()
 
             for person in people.people:
                 if person.active:
@@ -105,15 +93,12 @@ if __name__ == '__main__':
                     elif abs(person.position[0] - xtargets[1]) <= 100:
                         com_pose = 1
 
-                    # print("out", com.list_of_people_to_communicate)
                     if com_pose in com.list_of_people_to_communicate:
-                        print('JE SUIS DEDANS')
                         person.feature = [x for x in person.feature if x != 4]
                         message = str(com_pose) + ' ' + str(person.get_feature())
                         message = [com_pose, person.get_feature()]
                         com.send(message)
                         people.people[people.index_by_id(person.id)].reset_feature()
-                        # person.reset_feature()
                         com.list_of_people_to_analyze.remove(com_pose)
                         com.list_of_people_to_communicate.remove(com_pose)
                     
