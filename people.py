@@ -152,7 +152,7 @@ class Person():
         ang2 = self.angle(self.pose[self.nodes['RHip']] - self.pose[self.nodes['RKnee']], 
                           self.pose[self.nodes['RFoot']] - self.pose[self.nodes['RKnee']])
 
-        if dist1 < 0.8 and dist2 < 0.8 and dist3 < 0.9 and (ang1 < 2.8 or ang2 < 2.8):
+        if dist1 < 0.9 and dist2 < 0.9 and dist3 < 1 and (ang1 < 2.8 or ang2 < 2.8):
             self.feature.append(0)
             return True
         else:
@@ -236,6 +236,11 @@ class Person():
         dist_lk_rk_t1 = self.distance(self.pose[self.nodes['LKnee']], self.pose[self.nodes['RKnee']])
         dist_lk_rk_t0 = self.distance(self.pose_t0[self.nodes['LKnee']], self.pose_t0[self.nodes['RKnee']])
 
+        ang1 = self.angle(self.pose[self.nodes['LHip']] - self.pose[self.nodes['LKnee']], 
+                          self.pose[self.nodes['LFoot']] - self.pose[self.nodes['LKnee']])
+        ang2 = self.angle(self.pose[self.nodes['RHip']] - self.pose[self.nodes['RKnee']], 
+                          self.pose[self.nodes['RFoot']] - self.pose[self.nodes['RKnee']])
+
         vdk = abs(dist_lk_rk_t1 - dist_lk_rk_t0)
         # print(self.id, vdk)
 
@@ -243,12 +248,14 @@ class Person():
         # print(10, math.pi/5)
         # print(ang_l_w_e_sh)
 
-        if ((vx_lelbow > 5 and ang_r_e_sh_h < math.pi/6 and ang_r_w_e_sh > math.pi*0.7) or (vx_relbow > 5 and ang_l_e_sh_h < math.pi/6 and ang_l_w_e_sh > math.pi*0.7)) and vdk < 1:
+        print(self.id, ang1, ang2)
+
+        if ((vx_lelbow > 5 and ang_r_e_sh_h < math.pi/6 and ang_r_w_e_sh > math.pi*0.7) or (vx_relbow > 5 and ang_l_e_sh_h < math.pi/6 and ang_l_w_e_sh > math.pi*0.7)) and vdk < 1 and ang1 > 3 and ang2 > 3:
             self.feature.append(1)
-            print(self.id, "DIABLE")
+            # print(self.id, "DIABLE")
             return True
         else:
-            print(' ')
+            # print(' ')
             return False
 
         

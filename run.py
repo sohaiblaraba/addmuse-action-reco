@@ -8,8 +8,8 @@ import cv2
 
 
 if __name__ == '__main__':
-    # com = Communication(myip='192.168.0.110', receiveport=8000, sendip ='192.168.0.100', sendport=8100)
-    com = Communication(myip='localhost', receiveport=8000, sendip ='localhost', sendport=8100)
+    com = Communication(myip='192.168.0.110', receiveport=8000, sendip ='192.168.0.100', sendport=8100)
+    # com = Communication(myip='localhost', receiveport=8000, sendip ='localhost', sendport=8100)
     com.start()
 
     kapao = Kapao()
@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
     colors = [(204, 204, 0), (255, 51, 255)]
 
-    capture = [0, 1, './data/test.mp4'][2]
+    capture = [0, 1, './data/test.mp4', './data/test2.mp4'][0]
      
     if type(capture) is int:
         cap = cv2.VideoCapture(capture, cv2.CAP_DSHOW)
